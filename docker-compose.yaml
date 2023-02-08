@@ -13,7 +13,7 @@ services:
     networks:
       - app-network
   flask_app:
-    image: 'flask_app:2.3'
+    image: 'flask_app:2.4'
     ports:
       - "9000:8080"
     networks:
