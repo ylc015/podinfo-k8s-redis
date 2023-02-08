@@ -3,6 +3,7 @@ from werkzeug.exceptions import HTTPException
 import redis
 import os
 import json
+from flask import request
 
 app = Flask(__name__)
 
@@ -40,3 +41,7 @@ def disable_traffic():
 def get_env_json():
     return json.dumps(dict(os.environ)), 200
 
+
+@app.route("/headers")
+def get_request_headers():
+    return dict(request.headers)
