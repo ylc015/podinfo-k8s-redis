@@ -1,6 +1,8 @@
 from flask import Flask
 from werkzeug.exceptions import HTTPException
 import redis
+import os
+import json
 
 app = Flask(__name__)
 
@@ -34,19 +36,7 @@ def disable_traffic():
     r.set(APP_READY_KEY, 0)
     return {}, 202
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+@app.route("/env")
+def get_env_json():
+    return json.dumps(dict(os.environ)), 200
 
