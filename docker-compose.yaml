@@ -1,5 +1,4 @@
 version: '2'
-
 networks:
   app-network:
     driver: bridge
@@ -9,10 +8,12 @@ services:
     image: 'redis:latest'
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
+    expose:
+      - "6379"
     networks:
       - app-network
-  myapplication:
-    image: 'flask_app:1.7'
+  flask_app:
+    image: 'flask_app:2.3'
     ports:
       - "9000:8080"
     networks:

@@ -68,6 +68,7 @@ def handle_exception(e):
 
 @app.route("/cache/<key>", methods=["GET", "POST", "PUT", "DELETE"])
 def cache(key: str):
+    print(f"using redist host {REDIS_HOST} and redis port {REDIS_PORT}")
     r = redis.StrictRedis(host=REDIS_HOST, port=REDIS_PORT, db=0, charset="utf-8", decode_responses=True)
     if request.method == "GET":
         data = str(r.get(key))
