@@ -4,6 +4,8 @@ import redis
 import os
 import json
 from flask import request
+import asyncio
+
 
 app = Flask(__name__)
 
@@ -41,7 +43,14 @@ def disable_traffic():
 def get_env_json():
     return json.dumps(dict(os.environ)), 200
 
-
 @app.route("/headers")
 def get_request_headers():
     return dict(request.headers)
+
+@app.route("/delay/<seconds>")
+async def delay_request(seconds):
+    try: 
+        await asyncio.sleep(int(seconds))
+    except:
+        print(f"Invalid input {seconds}")
+    return {"delay": seconds}
