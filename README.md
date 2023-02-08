@@ -1,0 +1,1 @@
+# podinfo-k8s-redis
