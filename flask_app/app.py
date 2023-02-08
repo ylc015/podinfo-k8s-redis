@@ -51,6 +51,36 @@ def get_request_headers():
 async def delay_request(seconds):
     try: 
         await asyncio.sleep(int(seconds))
-    except:
-        print(f"Invalid input {seconds}")
+    except: print(f"Invalid input {seconds}")
     return {"delay": seconds}
+
+# TODO handle redis offline error
+@app.errorhandler(Exception)
+def handle_exception(e):
+    # pass through HTTP errors
+    if isinstance(e, HTTPException):
+        return e
+
+    return {"code": 400, "message": "Redis is offline"}
+
+
+@app.route("/cache/<key>", methods=["GET", "POST", "PUT", "DELETE"])
+def cache(key: str):
+    r = redis.StrictRedis(host='localhost', port=6379, db=0, charset="utf-8", decode_responses=True)
+    if request.method == "GET":
+        data = str(r.get(key))
+        if data == 'None':
+            return {}, 202
+        try: 
+            return dict(data)
+        except:
+            return data
+    elif request.method == "DELETE":
+        print(f"delete request {key}")
+        r.delete(key)
+    else:
+        print(f"update {key} with {request.get_data()}")
+        # POST or PUT
+        r.set(key, request.data)
+
+    return {}, 202
